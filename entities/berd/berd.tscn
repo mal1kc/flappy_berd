@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://q3x2fnhcw5pb"]
+
+[ext_resource type="Script" uid="uid://b0ne8ak8cp7h3" path="res://entities/berd/berd.gd" id="1_w71si"]
+[ext_resource type="Texture2D" uid="uid://b5nnq2thb2a3w" path="res://entities/berd/assets/texture.png" id="2_1ark8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1ark8"]
+radius = 4.70204
+height = 12.5388
+
+[node name="Berd" type="RigidBody2D"]
+lock_rotation = true
+contact_monitor = true
+max_contacts_reported = 2
+script = ExtResource("1_w71si")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(4, 4)
+texture = ExtResource("2_1ark8")
+
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1.19209e-07, -5.96046e-08)
+rotation = 1.5708
+scale = Vector2(3.5, 3.7)
+shape = SubResource("CapsuleShape2D_1ark8")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
