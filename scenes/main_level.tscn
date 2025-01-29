@@ -1,14 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://c58aemwrjoijj"]
+[gd_scene load_steps=4 format=3 uid="uid://c58aemwrjoijj"]
 
 [ext_resource type="Script" uid="uid://yxg0sddj7qbq" path="res://scenes/main_level.gd" id="1_ufxs0"]
 [ext_resource type="PackedScene" uid="uid://q3x2fnhcw5pb" path="res://entities/berd/berd.tscn" id="2_6we3w"]
+[ext_resource type="PackedScene" uid="uid://cwuyr8al8me8y" path="res://entities/obstacle_spawner/obstacle_spawner.tscn" id="3_6we3w"]
 
-[node name="MainLevel" type="StaticBody2D" node_paths=PackedStringArray("Player")]
+[node name="MainLevel" type="StaticBody2D" node_paths=PackedStringArray("Player", "obstacle_spawner")]
 script = ExtResource("1_ufxs0")
 Player = NodePath("Berd")
-generate_pair = null
+MAX_OBSTACLEPAIR_LIMIT = 0
+obstacle_spawner = NodePath("ObstacleSpawner")
 metadata/_custom_type_script = ExtResource("1_ufxs0")
 
 [node name="Berd" parent="." groups=["RESPAWNABLES"] instance=ExtResource("2_6we3w")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="ObstacleSpawner" parent="." node_paths=PackedStringArray("pair_holder") instance=ExtResource("3_6we3w")]
+pair_holder = NodePath("../ObstacleHolder")
+
+[node name="ObstacleHolder" type="Node" parent="."]
