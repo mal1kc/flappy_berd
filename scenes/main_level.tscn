@@ -7,7 +7,6 @@
 [node name="MainLevel" type="StaticBody2D" node_paths=PackedStringArray("Player", "obstacle_spawner")]
 script = ExtResource("1_ufxs0")
 Player = NodePath("Berd")
-MAX_OBSTACLEPAIR_LIMIT = 0
 obstacle_spawner = NodePath("ObstacleSpawner")
 metadata/_custom_type_script = ExtResource("1_ufxs0")
 

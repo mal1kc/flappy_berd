@@ -7,10 +7,11 @@ func _ready():
 
 
 func spawn_obstaclepair() -> void:
-  obstacle_spawner.spawn_obstacle_pair()
+  if not Engine.is_editor_hint():
+    obstacle_spawner.spawn_obstacle_pair()
 
 
 func _process(delta: float) -> void:
   if not Engine.is_editor_hint():
-    if obstacle_spawner.pair_holder.get_child_count() / 3 < MAX_OBSTACLEPAIR_LIMIT:
+    if get_obstacle_pair_count() < MAX_OBSTACLEPAIR_LIMIT:
       obstacle_spawner.spawn_obstacle_pair()

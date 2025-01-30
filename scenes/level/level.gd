@@ -7,8 +7,8 @@ extends StaticBody2D
 # TODO: improve statci typing ObstacleSpawner
 @export var obstacle_spawner: Node2D
 
-# @export var boundry_padding = 0.40
-@export var boundry_padding = 0.70
+@export var boundry_padding = 0.40
+# @export var boundry_padding = 0.30
 @export var started := false
 var window_size: Vector2
 
@@ -17,6 +17,13 @@ var window_size: Vector2
     _on_my_button_pressed()
 
 signal game_over
+
+
+func get_obstacle_pair_count() -> int:
+  var all_child_count = obstacle_spawner.pair_holder.get_child_count()
+  if all_child_count == 0:
+    return 0
+  return all_child_count / obstacle_spawner.child_per_pair
 
 
 func restart():
@@ -61,6 +68,7 @@ func setup_level_boundries():
       collision_shape.shape = shape
       add_child(collision_shape)
       collision_shape.add_to_group(&"level_boundries")
+
 
 func spawn_obstaclepair() -> void:
   pass

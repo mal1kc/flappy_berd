@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://eu2eh3snmsxx" path="res://entities/obstacle_spawner/obstacle_spawner.gd" id="1_rrrnb"]
 [ext_resource type="PackedScene" uid="uid://7f4u5tum4tci" path="res://entities/pipe_obstacle/pipe_obstacle.tscn" id="2_j3q3y"]
 
-[node name="ObstacleSpawner" type="Node2D"]
+[node name="ObstacleSpawner" type="Node2D" node_paths=PackedStringArray("spawn_timeout_timer")]
 script = ExtResource("1_rrrnb")
 pipe_obstacle_scene = ExtResource("2_j3q3y")
+spawn_timeout_timer = NodePath("Timer")
+
+[node name="Timer" type="Timer" parent="."]
