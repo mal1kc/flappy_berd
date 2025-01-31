@@ -2,7 +2,6 @@ extends Node2D
 class_name ObstacleSpawner
 
 @onready var level:Level  = self.owner
-
 @export var pipe_obstacle_scene = load("res://entities/pipe_obstacle/pipe_obstacle.tscn")
 @export var min_gapsize_pipes = 100
 @export var max_gapsize_pipes = 200
@@ -67,19 +66,18 @@ func spawn_obstacle_pair():
 
     new_pair.gap_size = randf_range(min_gapsize_pipes, max_gapsize_pipes)
     var gap_position_vert = randf_range(-gap_position_limit_vertical, gap_position_limit_vertical)
-    print("gap_position_vert : %f",gap_position_vert)
-    print("gap_size : %f",new_pair.gap_size)
+    # print("gap_position_vert : %f",gap_position_vert)
+    # print("gap_size : %f",new_pair.gap_size)
 
     new_pair.up_obstacle = pipe_obstacle_scene.instantiate()
 
     pair_holder.add_child(new_pair.up_obstacle)
     var up_obstacle = new_pair.up_obstacle
-    up_obstacle.position = Vector2.ZERO
+    up_obstacle.position = position
     up_obstacle.pair_id = pair_id
     up_obstacle.connect("obstacle_despawned",_on_pair_obstacle_despawn)
-    # up_obstacle.pipe_length = abs(up_obstacle.global_position.y - level.window_size.y / 2)
-    up_obstacle.pipe_length = 400
-    print(up_obstacle.pipe_length)
+    # can't be dynamicly selected because of position calculation depends lenght
+    up_obstacle.pipe_length =  level.window_size.y - gap_position_limit_vertical/2
     up_obstacle.gen_body()
     up_obstacle.rotate(PI)
     up_obstacle.position.y = gap_position_vert - (up_obstacle.collisionShape.shape.size.y / 2)
@@ -88,11 +86,11 @@ func spawn_obstacle_pair():
     new_pair.down_obstacle = pipe_obstacle_scene.instantiate()
     pair_holder.add_child(new_pair.down_obstacle)
     var down_obstacle  = new_pair.down_obstacle
-    down_obstacle.position = Vector2.ZERO
+    down_obstacle.position = position
     down_obstacle.pair_id = pair_id
     down_obstacle.connect("obstacle_despawned",_on_pair_obstacle_despawn)
-    # down_obstacle.pipe_length = abs(down_obstacle.sprite_head.global_position.y - level.window_size.y / 2)
-    down_obstacle.pipe_length = 400
+    # can't be dynamicly selected because of position calculation depends lenght
+    down_obstacle.pipe_length =  level.window_size.y - gap_position_limit_vertical/2
     down_obstacle.gen_body()
     down_obstacle.position.y = gap_position_vert + new_pair.gap_size + (down_obstacle.collisionShape.shape.size.y / 2)
 
@@ -117,11 +115,11 @@ func _create_score_rect_gap(obst_pair: ObstaclePair,gap_position_vert:float):
         obst_pair.gap_size
   )
   score_area.position = Vector2(
-    0,
+    position.x,
     gap_position_vert+obst_pair.gap_size/2
     )
 
-  print("_create_score_rect_gap: rect_shape_size = %s" % score_shape_size)
+  # print("_create_score_rect_gap: rect_shape_size = %s" % score_shape_size)
   if not obst_pair._created_score_rect:
     var col_shape := CollisionShape2D.new()
     var rect_shape := RectangleShape2D.new()

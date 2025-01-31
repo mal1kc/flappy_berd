@@ -49,9 +49,9 @@ func gen_body():
     var  texture_segment_length  = sprite_texture.get_height() / texture_segment_count
     var segment_length = texture_segment_length * sprite_scale.y
     var num_segments = int(pipe_length / segment_length)
-    print("texture_segment_length : %d" % texture_segment_length)
-    print("segment_length : %d" % segment_length)
-    print("num_segments : %d" % num_segments)
+    # print("texture_segment_length : %d" % texture_segment_length)
+    # print("segment_length : %d" % segment_length)
+    # print("num_segments : %d" % num_segments)
  
     # Create segments
     for i in range(num_segments):

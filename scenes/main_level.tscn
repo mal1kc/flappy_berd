@@ -16,6 +16,7 @@ metadata/_custom_type_script = ExtResource("1_ufxs0")
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="ObstacleSpawner" parent="." node_paths=PackedStringArray("pair_holder") instance=ExtResource("3_6we3w")]
+position = Vector2(800, 0)
 pair_holder = NodePath("../ObstacleHolder")
 
 [node name="ObstacleHolder" type="Node" parent="."]
