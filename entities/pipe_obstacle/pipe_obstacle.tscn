@@ -4,19 +4,21 @@
 [ext_resource type="Texture2D" uid="uid://smlnc7xk23lh" path="res://entities/pipe_obstacle/assets/texture.png" id="2_7cpfe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7cpfe"]
-size = Vector2(66, 571)
+size = Vector2(43.2, 129.6)
 
 [node name="PipeObstacle" type="Area2D"]
-scale = Vector2(0.6, 0.6)
+collision_layer = 2
 script = ExtResource("1_h3n71")
+sprite_texture = ExtResource("2_7cpfe")
 metadata/_custom_type_script = ExtResource("1_h3n71")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(4, 4)
+[node name="HeadSprite" type="Sprite2D" parent="."]
+position = Vector2(0, -43.2)
+scale = Vector2(2.4, 2.4)
 texture = ExtResource("2_7cpfe")
+vframes = 8
+
+[node name="BodySprites" type="Node2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 2.5)
 shape = SubResource("RectangleShape2D_7cpfe")
-
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]

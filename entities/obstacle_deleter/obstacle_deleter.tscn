@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dj1fojt483ek7"]
+
+[ext_resource type="Script" uid="uid://fg7aft42ehc3" path="res://entities/obstacle_deleter/obstacle_deleter.gd" id="1_hri1n"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_rcfpt"]
+normal = Vector2(1, 0)
+
+[node name="ObstacleDeleter" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_hri1n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("WorldBoundaryShape2D_rcfpt")
+debug_color = Color(0.964706, 0, 0.478431, 0.419608)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

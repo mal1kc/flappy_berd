@@ -1,22 +1,26 @@
 extends Node2D
 class_name ObstacleSpawner
 
+@onready var level:Level  = self.owner
+
 @export var pipe_obstacle_scene = load("res://entities/pipe_obstacle/pipe_obstacle.tscn")
 @export var min_gapsize_pipes = 100
-@export var max_gapsize_pipes = 640
+@export var max_gapsize_pipes = 200
+# min/max gap_size_position limit is -,+
+@export var gap_position_limit_vertical = 300
+@export var obstacle_deleter : ObstacleDeleter
 @export var pair_holder: Node
 @export var spawn_timeout_timer:Timer
 
 var child_per_pair = 3
 
-var per_position_limits = Vector2(min_gapsize_pipes / 2.0, max_gapsize_pipes / 2.0)
 
 signal obstacle_pair_gen_completed
 
 
 class ObstaclePair:
-  var up_obstacle: Area2D
-  var down_obstacle: Area2D
+  var up_obstacle: PipeObstacle
+  var down_obstacle: PipeObstacle
   var score_area: Area2D
   var move_speed: float = 100
   var move_dir: Vector2i = Vector2i(-1, 0)
@@ -37,6 +41,10 @@ func _ready():
     pair_holder = Node.new()
     add_child(pair_holder)
   spawn_timeout_timer.connect(&"timeout",_timer_timeout)
+  get_window().size_changed.connect(on_window_size_change)
+  
+func on_window_size_change():
+  gap_position_limit_vertical = (level.window_size.y/2) - (level.window_size.y/2 * 0.3)
 
 func _timer_timeout():
   spawn_timeout_timer.stop()
@@ -56,23 +64,39 @@ func spawn_obstacle_pair():
       return
     var new_pair = ObstaclePair.new()
     var pair_id = new_pair.get_instance_id()
-    print(per_position_limits)
 
     new_pair.gap_size = randf_range(min_gapsize_pipes, max_gapsize_pipes)
+    var gap_position_vert = randf_range(-gap_position_limit_vertical, gap_position_limit_vertical)
+    print("gap_position_vert : %f",gap_position_vert)
+    print("gap_size : %f",new_pair.gap_size)
 
     new_pair.up_obstacle = pipe_obstacle_scene.instantiate()
+
     pair_holder.add_child(new_pair.up_obstacle)
-    new_pair.up_obstacle.pair_id = pair_id
-    new_pair.up_obstacle.connect("obstacle_despawned",_on_pair_obstacle_despawn)
-    new_pair.up_obstacle.position.y = randf_range(-per_position_limits[0], -per_position_limits[1])
-    new_pair.up_obstacle.rotate(-PI)
+    var up_obstacle = new_pair.up_obstacle
+    up_obstacle.position = Vector2.ZERO
+    up_obstacle.pair_id = pair_id
+    up_obstacle.connect("obstacle_despawned",_on_pair_obstacle_despawn)
+    # up_obstacle.pipe_length = abs(up_obstacle.global_position.y - level.window_size.y / 2)
+    up_obstacle.pipe_length = 400
+    print(up_obstacle.pipe_length)
+    up_obstacle.gen_body()
+    up_obstacle.rotate(PI)
+    up_obstacle.position.y = gap_position_vert - (up_obstacle.collisionShape.shape.size.y / 2)
+
 
     new_pair.down_obstacle = pipe_obstacle_scene.instantiate()
     pair_holder.add_child(new_pair.down_obstacle)
-    new_pair.down_obstacle.pair_id = pair_id
-    new_pair.down_obstacle.connect("obstacle_despawned",_on_pair_obstacle_despawn)
-    new_pair.down_obstacle.position.y = new_pair.up_obstacle.position.y + new_pair.gap_size
-    _create_score_rect_gap(new_pair)
+    var down_obstacle  = new_pair.down_obstacle
+    down_obstacle.position = Vector2.ZERO
+    down_obstacle.pair_id = pair_id
+    down_obstacle.connect("obstacle_despawned",_on_pair_obstacle_despawn)
+    # down_obstacle.pipe_length = abs(down_obstacle.sprite_head.global_position.y - level.window_size.y / 2)
+    down_obstacle.pipe_length = 400
+    down_obstacle.gen_body()
+    down_obstacle.position.y = gap_position_vert + new_pair.gap_size + (down_obstacle.collisionShape.shape.size.y / 2)
+
+    _create_score_rect_gap(new_pair,gap_position_vert)
     emit_signal("obstacle_pair_gen_completed")
     new_pair.pair_generated = true
     obstaclePairs.append(new_pair)
@@ -83,14 +107,20 @@ func _physics_process(delta):
   for pair in obstaclePairs:
     pair.move(delta)
 
-func _create_score_rect_gap(obst_pair: ObstaclePair):
+func _create_score_rect_gap(obst_pair: ObstaclePair,gap_position_vert:float):
   obst_pair.score_area = Area2D.new()
-  obst_pair.score_area.name = &"score_area"
+  var score_area = obst_pair.score_area
+  score_area.name = "score_area" + str(obst_pair.get_instance_id())
   pair_holder.add_child(obst_pair.score_area)
   var score_shape_size = Vector2(
-        obst_pair.up_obstacle.col_height + abs(obst_pair.up_obstacle.position.y - obst_pair.down_obstacle.position.y),
-        obst_pair.up_obstacle.col_width
+        obst_pair.up_obstacle.col_width,
+        obst_pair.gap_size
   )
+  score_area.position = Vector2(
+    0,
+    gap_position_vert+obst_pair.gap_size/2
+    )
+
   print("_create_score_rect_gap: rect_shape_size = %s" % score_shape_size)
   if not obst_pair._created_score_rect:
     var col_shape := CollisionShape2D.new()

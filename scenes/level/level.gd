@@ -4,8 +4,8 @@ extends StaticBody2D
 
 @export var Player: Berd
 @export var MAX_OBSTACLEPAIR_LIMIT := 5
-# TODO: improve statci typing ObstacleSpawner
-@export var obstacle_spawner: Node2D
+# TODO: improve static typing ObstacleSpawner
+@export var obstacle_spawner: ObstacleSpawner
 
 @export var boundry_padding = 0.40
 # @export var boundry_padding = 0.30
@@ -24,7 +24,6 @@ func get_obstacle_pair_count() -> int:
   if all_child_count == 0:
     return 0
   return all_child_count / obstacle_spawner.child_per_pair
-
 
 func restart():
   started = false
