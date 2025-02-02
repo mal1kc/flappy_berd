@@ -7,8 +7,12 @@ extends StaticBody2D
 @export var obstacle_spawner: ObstacleSpawner
 
 @export var boundry_padding = 0.40
-# @export var boundry_padding = 0.30
 @export var started := false
+@onready var player_score := 0
+
+@export var ui_score_label: Label
+@export var ui_info_label: RichTextLabel
+
 var window_size: Vector2
 
 @export var generate_pair: bool:
@@ -16,6 +20,9 @@ var window_size: Vector2
     _on_my_button_pressed()
 
 signal game_over
+signal game_start
+
+signal player_entered_obstacle_area
 
 
 func get_obstacle_pair_count() -> int:
@@ -26,6 +33,7 @@ func get_obstacle_pair_count() -> int:
   @warning_ignore("integer_division")
   return all_child_count / obstacle_spawner.child_per_pair
 
+
 func restart():
   started = false
   get_tree().call_group(&"RESPAWNABLES", &"respawn")
@@ -34,13 +42,33 @@ func restart():
 func _ready():
   get_window().size_changed.connect(setup_level_boundries)
   game_over.connect(on_game_over)
+  game_start.connect(on_game_start)
+  player_entered_obstacle_area.connect(_on_player_entered_obstacle_area)
   restart()
   setup_level_boundries()
 
 
+func _on_player_entered_obstacle_area():
+  emit_signal("game_over")
+
+
 func on_game_over():
-  print("game_over")
+  print("game_over with player score : %d" % player_score)
   restart()
+  started = false
+  obstacle_spawner.is_enabled = false
+  ui_score_label.set_anchors_preset(Control.PRESET_CENTER, true)
+  obstacle_spawner._cleanup_obstacle_pairs()
+  ui_info_label.show()
+
+
+func on_game_start():
+  started = true
+  player_score = 3
+  obstacle_spawner.is_enabled = true
+  obstacle_spawner._cleanup_obstacle_pairs()
+  ui_info_label.hide()
+  ui_score_label.set_anchors_preset(Control.PRESET_TOP_LEFT, true)
 
 
 func setup_level_boundries():
@@ -76,3 +104,8 @@ func spawn_obstaclepair() -> void:
 
 func _on_my_button_pressed() -> void:
   spawn_obstaclepair()
+
+
+func _process(_delta: float) -> void:
+  if not Engine.is_editor_hint():
+    ui_score_label.text = "score : %d" % player_score

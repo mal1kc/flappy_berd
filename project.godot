@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 RESPAWNABLES=""
 
+[gui]
+
+theme/custom="uid://ba20wwt3fvris"
+
 [input]
 
 berd_jump={

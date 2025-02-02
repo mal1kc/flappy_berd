@@ -8,6 +8,7 @@ size = Vector2(43.2, 129.6)
 
 [node name="PipeObstacle" type="Area2D"]
 collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_h3n71")
 sprite_texture = ExtResource("2_7cpfe")
 metadata/_custom_type_script = ExtResource("1_h3n71")
@@ -22,3 +23,5 @@ vframes = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_7cpfe")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -9,3 +9,4 @@ pipe_obstacle_scene = ExtResource("2_j3q3y")
 spawn_timeout_timer = NodePath("Timer")
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 2.0

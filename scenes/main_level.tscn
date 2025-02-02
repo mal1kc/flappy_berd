@@ -5,21 +5,56 @@
 [ext_resource type="PackedScene" uid="uid://cwuyr8al8me8y" path="res://entities/obstacle_spawner/obstacle_spawner.tscn" id="3_6we3w"]
 [ext_resource type="PackedScene" uid="uid://dj1fojt483ek7" path="res://entities/obstacle_deleter/obstacle_deleter.tscn" id="4_qmak7"]
 
-[node name="MainLevel" type="StaticBody2D" node_paths=PackedStringArray("Player", "obstacle_spawner")]
+[node name="MainLevel" type="StaticBody2D" node_paths=PackedStringArray("Player", "obstacle_spawner", "ui_score_label", "ui_info_label")]
 script = ExtResource("1_ufxs0")
 Player = NodePath("Berd")
 obstacle_spawner = NodePath("ObstacleSpawner")
+ui_score_label = NodePath("Control/ScoreLabel")
+ui_info_label = NodePath("Control/InfoLabel")
 metadata/_custom_type_script = ExtResource("1_ufxs0")
 
 [node name="Berd" parent="." groups=["RESPAWNABLES"] instance=ExtResource("2_6we3w")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="ObstacleSpawner" parent="." node_paths=PackedStringArray("pair_holder") instance=ExtResource("3_6we3w")]
+[node name="ObstacleSpawner" parent="." node_paths=PackedStringArray("obstacle_deleter", "pair_holder") instance=ExtResource("3_6we3w")]
 position = Vector2(800, 0)
+obstacle_deleter = NodePath("../ObstacleDeleter")
 pair_holder = NodePath("../ObstacleHolder")
 
 [node name="ObstacleHolder" type="Node" parent="."]
 
 [node name="ObstacleDeleter" parent="." instance=ExtResource("4_qmak7")]
 position = Vector2(-601, 0)
+
+[node name="Control" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="Control"]
+offset_right = 273.0
+offset_bottom = 60.0
+text = "asdsdsd"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="InfoLabel" type="RichTextLabel" parent="Control"]
+modulate = Color(0.262745, 0.647059, 0, 1)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -258.5
+offset_top = -61.0
+offset_right = 258.5
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "press  [b]space[/b] to start game"
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
