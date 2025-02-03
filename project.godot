@@ -11,8 +11,9 @@ config_version=5
 [application]
 
 config/name="flappy_berd"
+config/version="0.9"
 run/main_scene="res://scenes/main_level.tscn"
-config/features=PackedStringArray("4.4", "Mobile")
+config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://icon.svg"
 
 [global_group]
@@ -21,7 +22,7 @@ RESPAWNABLES=""
 
 [gui]
 
-theme/custom="uid://ba20wwt3fvris"
+theme/custom="res://def_theme.tres"
 
 [input]
 
@@ -46,6 +47,7 @@ force_game_over={
 [rendering]
 
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
 textures/default_filters/use_nearest_mipmap_filter=true
 environment/defaults/default_clear_color=Color(0, 0.3918, 0.650964, 1)
 anti_aliasing/quality/msaa_2d=1
